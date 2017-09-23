@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>sockit.io</title>
+</head>
+<body>
+    <div id="app">
+        <ul>
+            <li v-for="msg in messages">{{ msg }}</li>
+        </ul>
+        <form @submit.prevent="sent">
+            <input type="text" v-model="message">
+            <button type="submit">send</button>    
+        </form>
+        
+    </div>
+
+    <script src="./socket.io.js"></script>
+    <script src="./vue.min.js"></script>
+    <script>
+        var socket = io();
+
+        new Vue({
+            el: '#app',
+            data: {
+                messages: [],
+                message: ''
+            },
+            methods: {
+                sent() {
+                    // alert(this.message);
+                    socket.emit('chat.message1', this.message);
+                    this.message = '';
+                }
+            },
+            created() {
+                socket.on('chat.message2', function(message) {
+                    this.messages.push(message);
+                }.bind(this));
+            }
+        });
+    </script>
+</body>
+</html>
